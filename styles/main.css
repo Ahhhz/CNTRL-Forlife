@@ -1,0 +1,32 @@
+.container{
+  margin-top: 7%;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.jumbotron{
+  text-align: center;
+}
+
+.pic-select{
+  display: block;
+}
+
+#dropzone{
+  background-position: center center;
+  min-height: 350px;
+  border: 2px solid black;
+  border-style: dashed;
+}
+
+.center-all{
+  display: block;
+  width: auto;
+  margin: 10px 5px 30px;
+}
+
+.fileInput{
+  position: absolute;
+  border: none;
+  border-radius: 0;
+}
