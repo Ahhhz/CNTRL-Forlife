@@ -27,6 +27,12 @@
    margin-bottom: 30px;
  }
 
+.thumb:focus{
+  transform: scale(5.0);
+  position: relative;
+  bottom: 480px;
+}
+
  #progress_bar {
    margin: 10px 0;
    padding: 3px;
@@ -64,6 +70,12 @@ input{
 
 small{
   display: block;
+}
+
+output{
+  padding:0;
+  line-height: 1.19;
+  font-size: 14.6px;
 }
 
 .glyphicon{

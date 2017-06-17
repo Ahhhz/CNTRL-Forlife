@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,10 +78,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.processSelectedFiles = processSelectedFiles;
 
-var _ajax = __webpack_require__(2);
+var _ajax = __webpack_require__(1);
 
 var getFileData = function getFileData(file) {
-
   return new Promise(function (resolve, reject) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
@@ -105,16 +104,18 @@ function processSelectedFiles(files) {
         var file = _ref.file,
             e = _ref.e,
             reader = _ref.reader;
-        var target = e.target;
+        var target = e.target,
+            loaded = e.loaded;
 
-        var div = document.createElement('div');
+        console.log(e, "HERE EVENT");
         var container = document.querySelector('.js-container');
+        var div = document.createElement('div');
 
-        div.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + target.result + '">\n\n    ';
-        container.appendChild(div).addEventListener('click', function (e) {
-          console.log(e);
-        });
-        console.log(div.querySelector('img').getAttribute('src'));
+        div.innerHTML = '<div id="progress" >' + loaded + '</div>\n      <img onclick="focus" class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
+        container.appendChild(div);
+
+        ///zoom picture and draw one box over it
+
         (0, _ajax.POST)('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
           requests: [{
             image: {
@@ -126,6 +127,10 @@ function processSelectedFiles(files) {
           }]
         }).then(function (data) {
           console.log(data.responses, "RESPONSE");
+          container.addEventListener('click', function (e) {
+
+            console.log(e);
+          });
         });
       });
     } //END FOR OF LOOP
@@ -152,56 +157,6 @@ function processSelectedFiles(files) {
 "use strict";
 
 
-var _app = __webpack_require__(0);
-
-var updateProgress = function updateProgress(e) {
-    if (e.lengthComputable) {
-        var percentLoaded = Math.round(e.loaded / e.total * 100);
-        // Increase the progress bar length.
-        if (percentLoaded < 100) {
-            progress.style.width = percentLoaded + '%';
-            progress.textContent = percentLoaded + '%';
-        }
-    }
-};
-
-//DRAG AND DROP
-var dropzone = document.querySelector('#dropzone');
-dropzone.addEventListener("dragover", function (e) {
-    e.preventDefault();
-}, false);
-
-dropzone.addEventListener("drop", function (e) {
-    e.preventDefault();
-    var dataTransfer = e.dataTransfer;
-    var files = dataTransfer.files;
-
-    (0, _app.processSelectedFiles)(files);
-}, false
-//END DRAG AND DROP
-
-//CHOOSE FILE
-);document.querySelector('#fileupload').addEventListener('change', function (e) {
-    var target = e.target;
-
-    console.log(e);
-    var files = target.files;
-
-    (0, _app.processSelectedFiles)(files);
-} //END CHOOSE FILE
-
-// document.querySelector('.thumb').addEventListener('click',(e) => {
-//   console.log(e);
-// })
-);
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -222,6 +177,39 @@ var POST = exports.POST = function POST(url, data) {
     http.send(JSON.stringify(data));
   });
 }; //POST
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _app = __webpack_require__(0);
+
+//DRAG AND DROP
+var dropzone = document.querySelector('#dropzone');
+dropzone.addEventListener("dragover", function (e) {
+  e.preventDefault();
+}, false);
+
+dropzone.addEventListener("drop", function (e) {
+  e.preventDefault();
+  var dataTransfer = e.dataTransfer;
+  var files = dataTransfer.files;
+
+  (0, _app.processSelectedFiles)(files);
+}, false
+//END DRAG AND DROP
+
+//CHOOSE FILE
+);document.querySelector('#fileupload').addEventListener('change', function (e) {
+  var target = e.target;
+  var files = target.files;
+
+  (0, _app.processSelectedFiles)(files);
+} //END CHOOSE FILE
+);
 
 /***/ })
 /******/ ]);
