@@ -101,7 +101,6 @@
     e.preventDefault();
   }, false);
 
-  // const handleFileSelect = () => {
   dropzone.addEventListener("drop", function (e) {
 
     var container = document.querySelector('.js-container'
@@ -111,11 +110,10 @@
     console.log(e, "E");
 
     var dataTransfer = e.dataTransfer;
-    var files = dataTransfer.files,
-        length = dataTransfer.length,
-        timestamp = dataTransfer.timestamp;
+    var files = dataTransfer.files;
 
-    console.log(dataTransfer, "DESTRUCTURING");
+    console.log(files, dataTransfer, "DESTRUCTURING");
+
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -124,30 +122,45 @@
       var _loop = function _loop() {
         var file = _step.value;
 
-        console.log(files, 'SINGLE FILE HERE IN FOR LOOP');
+        console.log(files, 'FILELIST HERE IN FOR LOOP');
         console.log("Filename: " + file.name);
         console.log("Type: " + file.type);
         console.log("Size: " + file.size + " bytes");
+        console.log(file, "BELOW FOR LOOP");
+        //read file and render image onto screen
         var reader = new FileReader();
         reader.readAsDataURL(file);
-
         reader.onload = function (file) {
           console.log(file, "FILE IN RENDER");
           console.log(e, "e IN THUMBNAIL");
           return function (e) {
             console.log(reader, "READER");
+            console.log(e, "IN EVENT IN CB");
+            var target = e.target;
+
             var form = document.createElement('form');
 
-            form.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + e.target.result + '">\n                ';
+            form.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + target.result + '">\n                ';
             container.appendChild(form);
+            POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+              requests: [{
+                image: {
+                  content: reader.result.split('data:image/jpeg;base64,').pop()
+                },
+                features: [{
+                  type: "TEXT_DETECTION"
+                }]
+              }]
+            }).then(function (data) {
+              console.log(data.responses);
+            });
           };
-          // Render thumbnail.
-        }(file);
+        }(file); // END render thumbnail.
       };
 
       for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         _loop();
-      }
+      } //END FOR LOOP
     } catch (err) {
       _didIteratorError = true;
       _iteratorError = err;
@@ -162,8 +175,7 @@
         }
       }
     }
-  }
-  //  }//END DRAG AND DROP
+  } //END DRAG AND DROP
 
 
   );var updateProgress = function updateProgress(e) {
@@ -203,24 +215,7 @@
   //
   //   }
   // }
-  //
-  // const dropzone = document.querySelector('#dropzone')
-  //
-  // dropzone.ondrop = (e) => {
-  //   e.preventDefault()
-  //   this.className = 'js-dropzone';
-  //   processSelectedFiles()
-  // };
-  //
-  // dropzone.ondragover = () => {
-  //   this.className = 'js-dropzone js-dragover';
-  //   return false;
-  // };
-  //
-  // dropzone.ondragleave = () => {
-  //   this.className = 'js-dropzone';
-  //   return false;
-  // }
+
 
   // document.querySelector('.js-dropzone').addEventListener('change', processSelectedFiles)
   // document.querySelector('#dropzone').addEventListener('change', handleFileSelect, false);

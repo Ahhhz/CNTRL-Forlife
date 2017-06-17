@@ -24,60 +24,73 @@
   const dropzone = document.querySelector('#dropzone')
 
   dropzone.addEventListener("dragover", (e) => {
-    e.preventDefault();
+      e.preventDefault();
   }, false);
 
-  // const handleFileSelect = () => {
+
   dropzone.addEventListener("drop", (e) => {
 
-    const container = document.querySelector('.js-container')
+      const container = document.querySelector('.js-container')
 
-    // cancel default actions
-    e.preventDefault();
-    console.log(e, "E")
+      // cancel default actions
+      e.preventDefault();
+      console.log(e, "E")
 
-   const {dataTransfer} = e
-   const {files,length,timestamp} = dataTransfer
-    console.log(dataTransfer,"DESTRUCTURING")
-    for (const file of files) {
-      console.log(files, 'SINGLE FILE HERE IN FOR LOOP');
-      console.log("Filename: " + file.name);
-      console.log("Type: " + file.type);
-      console.log("Size: " + file.size+ " bytes");
-      const reader = new FileReader();
-      reader.readAsDataURL(file)
+      const {dataTransfer} = e
+      const {files} = dataTransfer
+      console.log(files,dataTransfer, "DESTRUCTURING")
 
-      reader.onload = ((file) => {
-        console.log(file, "FILE IN RENDER");
-        console.log(e, "e IN THUMBNAIL");
-        return function(e) {
-          console.log(reader,"READER");
-          const form = document.createElement('form');
+      for (const file of files) {
+          console.log(files, 'FILELIST HERE IN FOR LOOP');
+          console.log("Filename: " + file.name);
+          console.log("Type: " + file.type);
+          console.log("Size: " + file.size + " bytes");
+          console.log(file,"BELOW FOR LOOP");
+          //read file and render image onto screen
+          const reader = new FileReader();
+          reader.readAsDataURL(file)
+          reader.onload = ((file) => {
+              console.log(file, "FILE IN RENDER");
+              console.log(e, "e IN THUMBNAIL");
+              return (e) => {
+                  console.log(reader, "READER");
+                  console.log(e,"IN EVENT IN CB");
+                  const {target} = e
+                  const form = document.createElement('form');
 
-          form.innerHTML = `<img class = "thumb" alt="${file.name}" src="${e.target.result}">
+                  form.innerHTML = `<img class = "thumb" alt="${file.name}" src="${target.result}">
                 `
-          container.appendChild(form)
-        }
-        // Render thumbnail.
-      })(file);
-    }
-  })
-  //  }//END DRAG AND DROP
+                  container.appendChild(form)
+                  POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+                    requests: [{
+                      image: {
+                        content: reader.result.split('data:image/jpeg;base64,').pop()
+                      },
+                      features: [{
+                        type: "TEXT_DETECTION",
+                      }]
+                    }]
+                  }).then((data) => {
+                    console.log(data.responses)
+                  })
+              }
+          })(file); // END render thumbnail.
+      } //END FOR LOOP
+  }) //END DRAG AND DROP
+
 
 
 
   const updateProgress = (e) => {
-    if (e.lengthComputable) {
-      const percentLoaded = Math.round((e.loaded / e.total) * 100);
-      // Increase the progress bar length.
-      if (percentLoaded < 100) {
-        progress.style.width = percentLoaded + '%';
-        progress.textContent = percentLoaded + '%';
+      if (e.lengthComputable) {
+          const percentLoaded = Math.round((e.loaded / e.total) * 100);
+          // Increase the progress bar length.
+          if (percentLoaded < 100) {
+              progress.style.width = percentLoaded + '%';
+              progress.textContent = percentLoaded + '%';
+          }
       }
-    }
   }
-
-
 
   // function processSelectedFiles(e) {
   //   const files = e.target.files;
@@ -105,24 +118,7 @@
   //
   //   }
   // }
-  //
-  // const dropzone = document.querySelector('#dropzone')
-  //
-  // dropzone.ondrop = (e) => {
-  //   e.preventDefault()
-  //   this.className = 'js-dropzone';
-  //   processSelectedFiles()
-  // };
-  //
-  // dropzone.ondragover = () => {
-  //   this.className = 'js-dropzone js-dragover';
-  //   return false;
-  // };
-  //
-  // dropzone.ondragleave = () => {
-  //   this.className = 'js-dropzone';
-  //   return false;
-  // }
+
 
   // document.querySelector('.js-dropzone').addEventListener('change', processSelectedFiles)
   // document.querySelector('#dropzone').addEventListener('change', handleFileSelect, false);
