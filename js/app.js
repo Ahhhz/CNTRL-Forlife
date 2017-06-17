@@ -1,40 +1,43 @@
 import {POST} from './ajax';
 
+const getFileData = (file) => {
+
+return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+      resolve({file, e, reader});
+    }
+  })
+};
+
  //RENDER IMAGE AND POST CALL TO API
 export function processSelectedFiles(files) {
-  const reader = new FileReader();
   for (const file of files) {
-    console.log(files, 'FILELIST HERE IN FOR LOOP');
-    console.log("Filename: " + file.name);
-    console.log("Type: " + file.type);
-    console.log("Size: " + file.size + " bytes");
-    reader.readAsDataURL(file)
-    reader.onload = ((file) => {
-        console.log(file, "FILE IN RENDER");
-        // console.log(e, "e IN THUMBNAIL");
-        return (e) => {
-            console.log(reader, "READER");
-            console.log(e,"IN EVENT IN CB");
-            const {target} = e
-            const form = document.createElement('form');
-            const container = document.querySelector('.js-container')
+    getFileData(file).then(({file, e, reader}) => {
+      const {target} = e
+      const div = document.createElement('div');
+      const container = document.querySelector('.js-container')
 
-            form.innerHTML = `<img class = "thumb" alt="${file.name}" src="${target.result}">
-          `
-            container.appendChild(form)
-            POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
-              requests: [{
-                image: {
-                  content: reader.result.split('data:image/jpeg;base64,').pop()
-                },
-                features: [{
-                  type: "TEXT_DETECTION",
-                }]
-              }]
-            }).then((data) => {
-              console.log(data.responses,"RESPONSE")
-            })
-        }
-    })(file); // END render thumbnail.
+      div.innerHTML = `<img class = "thumb" alt="${file.name}" src="${target.result}">
+
+    `
+      container.appendChild(div).addEventListener('click',(e) => {
+        console.log(e);
+      })
+      console.log(div.querySelector('img').getAttribute('src'))
+      POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+        requests: [{
+          image: {
+            content: div.querySelector('img').getAttribute('src').split('data:image/jpeg;base64,').pop()
+          },
+          features: [{
+            type: "TEXT_DETECTION",
+          }]
+        }]
+      }).then((data) => {
+        console.log(data.responses,"RESPONSE")
+      })
+    })
   }//END FOR OF LOOP
 }//END processSelectedFiles()

@@ -23,7 +23,7 @@ import {processSelectedFiles} from './app'
      const {dataTransfer} = e
      const {files} = dataTransfer
      processSelectedFiles(files)
-   })
+   },false)
    //END DRAG AND DROP
 
    //CHOOSE FILE
@@ -33,3 +33,7 @@ import {processSelectedFiles} from './app'
     const {files} = target
     processSelectedFiles(files)
   })//END CHOOSE FILE
+
+  // document.querySelector('.thumb').addEventListener('click',(e) => {
+  //   console.log(e);
+  // })

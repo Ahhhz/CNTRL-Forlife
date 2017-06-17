@@ -76,23 +76,74 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var POST = exports.POST = function POST(url, data) {
-  return new Promise(function (resolve, reject) {
-    var http = new XMLHttpRequest();
-    http.open('POST', url);
-    http.setRequestHeader('Content-Type', 'application/json');
-    http.onload = function () {
-      try {
-        var jsonData = JSON.parse(http.responseText);
-        resolve(jsonData);
-      } catch (e) {
-        reject(e);
-      }
-    }; // onload
+exports.processSelectedFiles = processSelectedFiles;
 
-    http.send(JSON.stringify(data));
+var _ajax = __webpack_require__(2);
+
+var getFileData = function getFileData(file) {
+
+  return new Promise(function (resolve, reject) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (e) {
+      resolve({ file: file, e: e, reader: reader });
+    };
   });
-}; //POST
+};
+
+//RENDER IMAGE AND POST CALL TO API
+function processSelectedFiles(files) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var file = _step.value;
+
+      getFileData(file).then(function (_ref) {
+        var file = _ref.file,
+            e = _ref.e,
+            reader = _ref.reader;
+        var target = e.target;
+
+        var div = document.createElement('div');
+        var container = document.querySelector('.js-container');
+
+        div.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + target.result + '">\n\n    ';
+        container.appendChild(div).addEventListener('click', function (e) {
+          console.log(e);
+        });
+        console.log(div.querySelector('img').getAttribute('src'));
+        (0, _ajax.POST)('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+          requests: [{
+            image: {
+              content: div.querySelector('img').getAttribute('src').split('data:image/jpeg;base64,').pop()
+            },
+            features: [{
+              type: "TEXT_DETECTION"
+            }]
+          }]
+        }).then(function (data) {
+          console.log(data.responses, "RESPONSE");
+        });
+      });
+    } //END FOR OF LOOP
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+} //END processSelectedFiles()
 
 /***/ }),
 /* 1 */
@@ -101,7 +152,7 @@ var POST = exports.POST = function POST(url, data) {
 "use strict";
 
 
-var _app = __webpack_require__(2);
+var _app = __webpack_require__(0);
 
 var updateProgress = function updateProgress(e) {
     if (e.lengthComputable) {
@@ -126,7 +177,7 @@ dropzone.addEventListener("drop", function (e) {
     var files = dataTransfer.files;
 
     (0, _app.processSelectedFiles)(files);
-}
+}, false
 //END DRAG AND DROP
 
 //CHOOSE FILE
@@ -138,6 +189,10 @@ dropzone.addEventListener("drop", function (e) {
 
     (0, _app.processSelectedFiles)(files);
 } //END CHOOSE FILE
+
+// document.querySelector('.thumb').addEventListener('click',(e) => {
+//   console.log(e);
+// })
 );
 
 /***/ }),
@@ -150,69 +205,23 @@ dropzone.addEventListener("drop", function (e) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.processSelectedFiles = processSelectedFiles;
-
-var _ajax = __webpack_require__(0);
-
-//RENDER IMAGE AND POST CALL TO API
-function processSelectedFiles(files) {
-  var reader = new FileReader();
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var file = _step.value;
-
-      console.log(files, 'FILELIST HERE IN FOR LOOP');
-      console.log("Filename: " + file.name);
-      console.log("Type: " + file.type);
-      console.log("Size: " + file.size + " bytes");
-      reader.readAsDataURL(file);
-      reader.onload = function (file) {
-        console.log(file, "FILE IN RENDER");
-        // console.log(e, "e IN THUMBNAIL");
-        return function (e) {
-          console.log(reader, "READER");
-          console.log(e, "IN EVENT IN CB");
-          var target = e.target;
-
-          var form = document.createElement('form');
-          var container = document.querySelector('.js-container');
-
-          form.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + target.result + '">\n          ';
-          container.appendChild(form);
-          (0, _ajax.POST)('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
-            requests: [{
-              image: {
-                content: reader.result.split('data:image/jpeg;base64,').pop()
-              },
-              features: [{
-                type: "TEXT_DETECTION"
-              }]
-            }]
-          }).then(function (data) {
-            console.log(data.responses, "RESPONSE");
-          });
-        };
-      }(file); // END render thumbnail.
-    } //END FOR OF LOOP
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
+var POST = exports.POST = function POST(url, data) {
+  return new Promise(function (resolve, reject) {
+    var http = new XMLHttpRequest();
+    http.open('POST', url);
+    http.setRequestHeader('Content-Type', 'application/json');
+    http.onload = function () {
+      try {
+        var jsonData = JSON.parse(http.responseText);
+        resolve(jsonData);
+      } catch (e) {
+        reject(e);
       }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-} //END processSelectedFiles()
+    }; // onload
+
+    http.send(JSON.stringify(data));
+  });
+}; //POST
 
 /***/ })
 /******/ ]);

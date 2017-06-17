@@ -36,14 +36,17 @@
    opacity: 0;
    -webkit-transition: opacity 1s linear;
  }
+
  #progress_bar.loading {
    opacity: 1.0;
  }
+
  #progress_bar .percent {
    background-color: #99ccff;
    height: auto;
    width: 0;
  }
+
 .select{
   position: relative;
 }
@@ -58,9 +61,11 @@ input{
   left:0;
   visibility: hidden;
 }
+
 small{
   display: block;
 }
+
 .glyphicon{
   font-size: 55px;
 }
