@@ -18,12 +18,12 @@
     });
   } //POST
 
-  function processSelectedFiles(event) {
-    const files = event.target.files;
+  function processSelectedFiles(e) {
+    const files = e.target.files;
     const reader = new FileReader();
 
     for (let i = 0; i < files.length; i++) {
-      // console.log("Filename " + files[i].name, 'files[i]_________!!!',files[i]);
+      console.log("Filename " + files[i].name,files[i]);
       reader.readAsDataURL(files[i])
       reader.addEventListener("load", function() {
         // console.log(reader.result)
@@ -44,5 +44,25 @@
 
     }
   }
+  
+  const dropzone = document.querySelector('#dropzone')
+
+  dropzone.ondrop = (e) => {
+    e.preventDefault()
+    this.className = 'js-dropzone';
+    processSelectedFiles()
+  };
+
+  dropzone.ondragover = () => {
+    this.className = 'js-dropzone js-dragover';
+    return false;
+  };
+
+  dropzone.ondragleave = () => {
+    this.className = 'js-dropzone';
+    return false;
+  }
+
   document.querySelector('.fileInput').addEventListener('change', processSelectedFiles)
+
 })();

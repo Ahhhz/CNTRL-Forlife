@@ -2,31 +2,29 @@
   margin-top: 7%;
   padding-left: 10%;
   padding-right: 10%;
-}
-
-.jumbotron{
   text-align: center;
 }
 
 .pic-select{
+  position: relative;
   display: block;
 }
 
 #dropzone{
-  background-position: center center;
-  min-height: 350px;
-  border: 2px solid black;
-  border-style: dashed;
+  height: 450px;
+  border: 2px dashed #34495E;
+  line-height: 150px;
+  outline-offset: -10px;
 }
 
-.center-all{
-  display: block;
-  width: auto;
-  margin: 10px 5px 30px;
-}
 
-.fileInput{
+#file{
   position: absolute;
   border: none;
   border-radius: 0;
+}
+
+.js-dropzone.js-dragover{
+  border-color: green;
+  color: green;
 }

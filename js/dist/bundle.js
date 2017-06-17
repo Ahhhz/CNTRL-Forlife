@@ -74,6 +74,7 @@
 
 
 (function () {
+  var _this = this;
 
   var POST = function POST(url, data) {
     return new Promise(function (resolve, reject) {
@@ -93,12 +94,12 @@
     });
   }; //POST
 
-  function processSelectedFiles(event) {
-    var files = event.target.files;
+  function processSelectedFiles(e) {
+    var files = e.target.files;
     var reader = new FileReader();
 
     for (var i = 0; i < files.length; i++) {
-      // console.log("Filename " + files[i].name, 'files[i]_________!!!',files[i]);
+      console.log("Filename " + files[i].name, files[i]);
       reader.readAsDataURL(files[i]);
       reader.addEventListener("load", function () {
         // console.log(reader.result)
@@ -118,6 +119,25 @@
       }, false);
     }
   }
+
+  var dropzone = document.querySelector('#dropzone');
+
+  dropzone.ondrop = function (e) {
+    e.preventDefault();
+    _this.className = 'js-dropzone';
+    processSelectedFiles();
+  };
+
+  dropzone.ondragover = function () {
+    _this.className = 'js-dropzone js-dragover';
+    return false;
+  };
+
+  dropzone.ondragleave = function () {
+    _this.className = 'js-dropzone';
+    return false;
+  };
+
   document.querySelector('.fileInput').addEventListener('change', processSelectedFiles);
 })();
 
