@@ -93,6 +93,7 @@
     });
   }; //POST
 
+
   //DRAG AND DROP
   var dropzone = document.querySelector('#dropzone');
 
@@ -102,41 +103,50 @@
 
   // const handleFileSelect = () => {
   dropzone.addEventListener("drop", function (e) {
+
     var container = document.querySelector('.js-container'
+
     // cancel default actions
     );e.preventDefault();
     console.log(e, "E");
-    var i = 0,
-        files = e.dataTransfer.files,
-        len = files.length;
-    console.log(files, 'FILES HERE!!!');
-    // const reader = new FileReader();
+
+    var dataTransfer = e.dataTransfer;
+    var files = dataTransfer.files,
+        length = dataTransfer.length,
+        timestamp = dataTransfer.timestamp;
+
+    console.log(dataTransfer, "DESTRUCTURING");
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-      for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _loop = function _loop() {
         var file = _step.value;
 
-        console.log(file, 'SINGLE FILE HERE IN FOR LOOP');
-        console.log("Filename: " + files[i].name);
-        console.log("Type: " + files[i].type);
-        console.log("Size: " + files[i].size + " bytes");
+        console.log(files, 'SINGLE FILE HERE IN FOR LOOP');
+        console.log("Filename: " + file.name);
+        console.log("Type: " + file.type);
+        console.log("Size: " + file.size + " bytes");
         var reader = new FileReader();
         reader.readAsDataURL(file);
+
         reader.onload = function (file) {
           console.log(file, "FILE IN RENDER");
           console.log(e, "e IN THUMBNAIL");
           return function (e) {
-            console.log(file);
-            var div = document.createElement('div');
+            console.log(reader, "READER");
+            var form = document.createElement('form');
 
-            div.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + e.target.result + '">\n                ';
-            container.appendChild(div);
+            form.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + e.target.result + '">\n                ';
+            container.appendChild(form);
           };
           // Render thumbnail.
         }(file);
+      };
+
+      for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        _loop();
       }
     } catch (err) {
       _didIteratorError = true;
@@ -155,6 +165,17 @@
   }
   //  }//END DRAG AND DROP
 
+
+  );var updateProgress = function updateProgress(e) {
+    if (e.lengthComputable) {
+      var percentLoaded = Math.round(e.loaded / e.total * 100);
+      // Increase the progress bar length.
+      if (percentLoaded < 100) {
+        progress.style.width = percentLoaded + '%';
+        progress.textContent = percentLoaded + '%';
+      }
+    }
+  };
 
   // function processSelectedFiles(e) {
   //   const files = e.target.files;
@@ -203,7 +224,6 @@
 
   // document.querySelector('.js-dropzone').addEventListener('change', processSelectedFiles)
   // document.querySelector('#dropzone').addEventListener('change', handleFileSelect, false);
-  );
 })();
 
 /***/ })
