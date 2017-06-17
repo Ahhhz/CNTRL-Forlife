@@ -93,7 +93,7 @@
     });
   }; //POST
 
-
+  //DRAG AND DROP
   var dropzone = document.querySelector('#dropzone');
 
   dropzone.addEventListener("dragover", function (e) {
@@ -108,18 +108,21 @@
     var i = 0,
         files = event.dataTransfer.files,
         len = files.length;
-    var reader = new FileReader();
+    console.log(files, 'FILES HERE!!!');
+    // const reader = new FileReader();
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-      for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _loop = function _loop() {
         var file = _step.value;
 
+        console.log(file, 'SINGLE FILE HERE IN FOR LOOP');
         console.log("Filename: " + files[i].name);
         console.log("Type: " + files[i].type);
         console.log("Size: " + files[i].size + " bytes");
+        var reader = new FileReader();
         reader.readAsDataURL(file);
         reader.addEventListener("load", function () {
           POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
@@ -132,9 +135,13 @@
               }]
             }]
           }).then(function (data) {
-            console.log(data.responses);
+            console.log(data);
           });
         }, false);
+      };
+
+      for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        _loop();
       }
     } catch (err) {
       _didIteratorError = true;
@@ -150,8 +157,9 @@
         }
       }
     }
-  }
-  //
+  } //END DRAG AND DROP
+
+
   // function processSelectedFiles(e) {
   //   const files = e.target.files;
   //   const reader = new FileReader();

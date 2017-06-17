@@ -7,7 +7,7 @@
 
 #dropzone{
   height: 450px;
-  border: 2px dashed #34495E;
+  border: 2px dashed #F0F3F4;
   line-height: 150px;
   background-color: #CACFD2;
   outline-offset: -10px;
@@ -15,17 +15,6 @@
 
 .jumbotron{
   background-color: #AEB6BF;
-}
-
-#file{
-  position: absolute;
-  border: none;
-  border-radius: 0;
-}
-
-.js-dropzone.js-dragover{
-  border-color: green;
-  color: green;
 }
 
 #zone{

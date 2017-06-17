@@ -18,7 +18,7 @@
     });
   } //POST
 
-
+//DRAG AND DROP
   const dropzone = document.querySelector('#dropzone')
 
 
@@ -35,13 +35,16 @@
     let i = 0,
       files = event.dataTransfer.files,
       len = files.length;
-      const reader = new FileReader();
+      console.log(files,'FILES HERE!!!');
+      // const reader = new FileReader();
     for (const file of files) {
+      console.log(file,'SINGLE FILE HERE IN FOR LOOP');
       console.log("Filename: " + files[i].name);
       console.log("Type: " + files[i].type);
       console.log("Size: " + files[i].size + " bytes");
+       const reader = new FileReader();
       reader.readAsDataURL(file)
-      reader.addEventListener("load", function() {
+      reader.addEventListener("load", () => {
       POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
         requests: [{
           image: {
@@ -52,13 +55,15 @@
           }]
         }]
       }).then((data) => {
-        console.log(data.responses)
+        console.log(data)
       })
 
     },false)
   }
-})
-  //
+})//END DRAG AND DROP
+
+
+
   // function processSelectedFiles(e) {
   //   const files = e.target.files;
   //   const reader = new FileReader();
