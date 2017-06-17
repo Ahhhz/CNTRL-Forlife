@@ -20,3 +20,9 @@
 #zone{
   color: #2471A3;
 }
+
+.thumb {
+   height: 275px;
+   border: 1px solid #000;
+   margin-bottom: 30px;
+ }
