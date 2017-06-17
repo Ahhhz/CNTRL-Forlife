@@ -18,51 +18,92 @@
     });
   } //POST
 
-  function processSelectedFiles(e) {
-    const files = e.target.files;
-    const reader = new FileReader();
 
-    for (let i = 0; i < files.length; i++) {
-      console.log("Filename " + files[i].name,files[i]);
-      reader.readAsDataURL(files[i])
-      reader.addEventListener("load", function() {
-        // console.log(reader.result)
-        // call ajax here
-        POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
-          requests: [{
-            image: {
-              content: reader.result.split('data:image/jpeg;base64,').pop()
-            },
-            features: [{
-              type: "TEXT_DETECTION",
-            }]
-          }]
-        }).then((data) => {
-          console.log(data.responses)
-        })
-      }, false);
-
-    }
-  }
-  
   const dropzone = document.querySelector('#dropzone')
 
-  dropzone.ondrop = (e) => {
-    e.preventDefault()
-    this.className = 'js-dropzone';
-    processSelectedFiles()
-  };
 
-  dropzone.ondragover = () => {
-    this.className = 'js-dropzone js-dragover';
-    return false;
-  };
+  dropzone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  }, false);
 
-  dropzone.ondragleave = () => {
-    this.className = 'js-dropzone';
-    return false;
+
+  dropzone.addEventListener("drop", (e) => {
+
+    // cancel default actions
+    e.preventDefault();
+
+    let i = 0,
+      files = event.dataTransfer.files,
+      len = files.length;
+      const reader = new FileReader();
+    for (const file of files) {
+      console.log("Filename: " + files[i].name);
+      console.log("Type: " + files[i].type);
+      console.log("Size: " + files[i].size + " bytes");
+      reader.readAsDataURL(file)
+      reader.addEventListener("load", function() {
+      POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+        requests: [{
+          image: {
+            content: reader.result.split('data:image/jpeg;base64,').pop()
+          },
+          features: [{
+            type: "TEXT_DETECTION",
+          }]
+        }]
+      }).then((data) => {
+        console.log(data.responses)
+      })
+
+    },false)
   }
+})
+  //
+  // function processSelectedFiles(e) {
+  //   const files = e.target.files;
+  //   const reader = new FileReader();
+  //
+  //   for (let i = 0; i < files.length; i++) {
+  //     console.log("Filename " + files[i].name,files[i]);
+  //     reader.readAsDataURL(files[i])
+  //     reader.addEventListener("load", function() {
+  //       // console.log(reader.result)
+  //       // call ajax here
+  //       POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+  //         requests: [{
+  //           image: {
+  //             content: reader.result.split('data:image/jpeg;base64,').pop()
+  //           },
+  //           features: [{
+  //             type: "TEXT_DETECTION",
+  //           }]
+  //         }]
+  //       }).then((data) => {
+  //         console.log(data.responses)
+  //       })
+  //     }, false);
+  //
+  //   }
+  // }
+  //
+  // const dropzone = document.querySelector('#dropzone')
+  //
+  // dropzone.ondrop = (e) => {
+  //   e.preventDefault()
+  //   this.className = 'js-dropzone';
+  //   processSelectedFiles()
+  // };
+  //
+  // dropzone.ondragover = () => {
+  //   this.className = 'js-dropzone js-dragover';
+  //   return false;
+  // };
+  //
+  // dropzone.ondragleave = () => {
+  //   this.className = 'js-dropzone';
+  //   return false;
+  // }
 
-  document.querySelector('.fileInput').addEventListener('change', processSelectedFiles)
+  // document.querySelector('.js-dropzone').addEventListener('change', processSelectedFiles)
 
 })();
