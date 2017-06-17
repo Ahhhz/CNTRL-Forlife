@@ -94,53 +94,45 @@
   }; //POST
 
 
-  //DRAG AND DROP
-  var dropzone = document.querySelector('#dropzone');
+  var updateProgress = function updateProgress(e) {
+    if (e.lengthComputable) {
+      var percentLoaded = Math.round(e.loaded / e.total * 100);
+      // Increase the progress bar length.
+      if (percentLoaded < 100) {
+        progress.style.width = percentLoaded + '%';
+        progress.textContent = percentLoaded + '%';
+      }
+    }
+  };
 
-  dropzone.addEventListener("dragover", function (e) {
-    e.preventDefault();
-  }, false);
-
-  dropzone.addEventListener("drop", function (e) {
-
-    var container = document.querySelector('.js-container'
-
-    // cancel default actions
-    );e.preventDefault();
-    console.log(e, "E");
-
-    var dataTransfer = e.dataTransfer;
-    var files = dataTransfer.files;
-
-    console.log(files, dataTransfer, "DESTRUCTURING");
-
+  //RENDER IMAGE AND POST CALL TO API
+  function processSelectedFiles(files) {
+    var reader = new FileReader();
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-      var _loop = function _loop() {
+      for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var file = _step.value;
 
         console.log(files, 'FILELIST HERE IN FOR LOOP');
         console.log("Filename: " + file.name);
         console.log("Type: " + file.type);
         console.log("Size: " + file.size + " bytes");
-        console.log(file, "BELOW FOR LOOP");
-        //read file and render image onto screen
-        var reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function (file) {
           console.log(file, "FILE IN RENDER");
-          console.log(e, "e IN THUMBNAIL");
+          // console.log(e, "e IN THUMBNAIL");
           return function (e) {
             console.log(reader, "READER");
             console.log(e, "IN EVENT IN CB");
             var target = e.target;
 
             var form = document.createElement('form');
+            var container = document.querySelector('.js-container');
 
-            form.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + target.result + '">\n                ';
+            form.innerHTML = '<img class = "thumb" alt="' + file.name + '" src="' + target.result + '">\n            ';
             container.appendChild(form);
             POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
               requests: [{
@@ -152,15 +144,11 @@
                 }]
               }]
             }).then(function (data) {
-              console.log(data.responses);
+              console.log(data.responses, "RESPONSE");
             });
           };
         }(file); // END render thumbnail.
-      };
-
-      for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        _loop();
-      } //END FOR LOOP
+      } //END FOR OF LOOP
     } catch (err) {
       _didIteratorError = true;
       _iteratorError = err;
@@ -175,50 +163,51 @@
         }
       }
     }
-  } //END DRAG AND DROP
+  } //END processSelectedFiles()
 
+  // reader.addEventListener("load", function() {
+  //   // console.log(reader.result)
+  //   // call ajax here
+  //   POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+  //     requests: [{
+  //       image: {
+  //         content: reader.result.split('data:image/jpeg;base64,').pop()
+  //       },
+  //       features: [{
+  //         type: "TEXT_DETECTION",
+  //       }]
+  //     }]
+  //   }).then((data) => {
+  //     console.log(data.responses)
+  //   })
+  // }, false);
 
-  );var updateProgress = function updateProgress(e) {
-    if (e.lengthComputable) {
-      var percentLoaded = Math.round(e.loaded / e.total * 100);
-      // Increase the progress bar length.
-      if (percentLoaded < 100) {
-        progress.style.width = percentLoaded + '%';
-        progress.textContent = percentLoaded + '%';
-      }
-    }
-  };
+  //DRAG AND DROP
+  var dropzone = document.querySelector('#dropzone');
+  dropzone.addEventListener("dragover", function (e) {
+    e.preventDefault();
+  }, false);
 
-  // function processSelectedFiles(e) {
-  //   const files = e.target.files;
-  //   const reader = new FileReader();
-  //
-  //   for (let i = 0; i < files.length; i++) {
-  //     console.log("Filename " + files[i].name,files[i]);
-  //     reader.readAsDataURL(files[i])
-  //     reader.addEventListener("load", function() {
-  //       // console.log(reader.result)
-  //       // call ajax here
-  //       POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
-  //         requests: [{
-  //           image: {
-  //             content: reader.result.split('data:image/jpeg;base64,').pop()
-  //           },
-  //           features: [{
-  //             type: "TEXT_DETECTION",
-  //           }]
-  //         }]
-  //       }).then((data) => {
-  //         console.log(data.responses)
-  //       })
-  //     }, false);
-  //
-  //   }
-  // }
+  dropzone.addEventListener("drop", function (e) {
+    e.preventDefault();
+    var dataTransfer = e.dataTransfer;
+    var files = dataTransfer.files;
 
+    processSelectedFiles(files);
+  }
+  //END DRAG AND DROP
 
-  // document.querySelector('.js-dropzone').addEventListener('change', processSelectedFiles)
-  // document.querySelector('#dropzone').addEventListener('change', handleFileSelect, false);
+  //CHOOSE FILE
+  );document.querySelector('#fileupload').addEventListener('change', function (e) {
+    var target = e.target;
+
+    console.log(e);
+    var files = target.files;
+
+    processSelectedFiles(files);
+  } //END CHOOSE FILE
+
+  );
 })();
 
 /***/ })
