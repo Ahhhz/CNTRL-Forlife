@@ -80,6 +80,8 @@ exports.processSelectedFiles = processSelectedFiles;
 
 var _ajax = __webpack_require__(1);
 
+// import {mapper} from './apiMapper'
+
 var getFileData = function getFileData(file) {
   return new Promise(function (resolve, reject) {
     var reader = new FileReader();
@@ -112,9 +114,8 @@ function processSelectedFiles(files) {
 
         div.innerHTML = '<div id="progress" >' + loaded + '</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
         container.appendChild(div);
-
+        console.log("HERE BEFORE DATA");
         ///zoom picture and draw one box over it
-
         (0, _ajax.POST)('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
           requests: [{
             image: {
@@ -125,17 +126,15 @@ function processSelectedFiles(files) {
             }]
           }]
         }).then(function (data) {
-          console.log(data.responses, "RESPONSE");
           var img = document.querySelector('img');
           img.addEventListener('click', function (e) {
-            console.log(e, "HERE EVENT");
-            var removeclassName = "thumb";
-            var className = "thumb-zoom";
-            img.classList.remove(removeclassName);
-            if (removeclassName) {
-              img.classList.add(className);
-            }
+            return overLay(e, img);
           });
+          var responses = data.responses;
+
+          var text = responses[0].textAnnotations;
+          var fullText = responses[0].fullTextAnnotation;
+          console.log("LETTER BY LETTER:", text, "FULL TEXT:", fullText);
         });
       });
     } //END FOR OF LOOP
@@ -154,6 +153,18 @@ function processSelectedFiles(files) {
     }
   }
 } //END processSelectedFiles()
+
+
+var overLay = function overLay(e, img) {
+  var target = e.target;
+  var classList = target.classList;
+
+  classList.remove('thumb');
+  classList.add('thumb-zoom');
+  var imageCont = document.querySelector('.js-image-container');
+  imageCont.style.display = 'block';
+  imageCont.appendChild(img);
+};
 
 /***/ }),
 /* 1 */

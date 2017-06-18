@@ -1,4 +1,5 @@
 import {POST} from './ajax';
+// import {mapper} from './apiMapper'
 
 const getFileData = (file) => {
 return new Promise((resolve, reject) => {
@@ -9,6 +10,7 @@ return new Promise((resolve, reject) => {
     }
   })
 };
+
 
 
  //RENDER IMAGE AND POST CALL TO API
@@ -24,31 +26,37 @@ export function processSelectedFiles(files) {
       <div>${file.name}</div>
     `
       container.appendChild(div);
-
+      console.log("HERE BEFORE DATA");
       ///zoom picture and draw one box over it
-
       POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
         requests: [{
           image: {
             content: div.querySelector('img').getAttribute('src').split('data:image/jpeg;base64,').pop()
-          },
+            },
           features: [{
             type: "TEXT_DETECTION",
+            }]
           }]
-        }]
-      }).then((data) => {
-        console.log(data.responses,"RESPONSE")
-        const img = document.querySelector('img')
-        img.addEventListener('click', (e) => {
-           console.log(e,"HERE EVENT");
-          const removeclassName = "thumb"
-          const className = "thumb-zoom"
-            img.classList.remove(removeclassName)
-          if(removeclassName){
-            img.classList.add(className)
-          }
-        })
+        }).then((data) => {
+          const img = document.querySelector('img')
+          img.addEventListener('click',(e) => overLay(e,img))
+          const {responses} = data
+          const text = responses[0].textAnnotations
+          const fullText = responses[0].fullTextAnnotation
+          console.log("LETTER BY LETTER:",text,"FULL TEXT:",fullText)
       })
     })
   }//END FOR OF LOOP
 }//END processSelectedFiles()
+
+
+
+const overLay =  (e, img) => {
+  const {target} = e
+  const {classList} = target
+  classList.remove('thumb');
+  classList.add('thumb-zoom')
+  const imageCont = document.querySelector('.js-image-container');
+  imageCont.style.display = 'block';
+  imageCont.appendChild(img)
+};
