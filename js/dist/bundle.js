@@ -107,11 +107,10 @@ function processSelectedFiles(files) {
         var target = e.target,
             loaded = e.loaded;
 
-        console.log(e, "HERE EVENT");
         var container = document.querySelector('.js-container');
         var div = document.createElement('div');
 
-        div.innerHTML = '<div id="progress" >' + loaded + '</div>\n      <img onclick="focus" class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
+        div.innerHTML = '<div id="progress" >' + loaded + '</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
         container.appendChild(div);
 
         ///zoom picture and draw one box over it
@@ -127,9 +126,15 @@ function processSelectedFiles(files) {
           }]
         }).then(function (data) {
           console.log(data.responses, "RESPONSE");
-          container.addEventListener('click', function (e) {
-
-            console.log(e);
+          var img = document.querySelector('img');
+          img.addEventListener('click', function (e) {
+            console.log(e, "HERE EVENT");
+            var removeclassName = "thumb";
+            var className = "thumb-zoom";
+            img.classList.remove(removeclassName);
+            if (removeclassName) {
+              img.classList.add(className);
+            }
           });
         });
       });

@@ -16,12 +16,11 @@ export function processSelectedFiles(files) {
   for (const file of files) {
     getFileData(file).then(({file, e, reader}) => {
       const {target,loaded} = e
-      console.log(e,"HERE EVENT");
       const container = document.querySelector('.js-container')
       const div = document.createElement('div');
 
       div.innerHTML = `<div id="progress" >${loaded}</div>
-      <img onclick="focus" class="thumb" alt="${file.name}" src="${target.result}">
+      <img class="thumb" alt="${file.name}" src="${target.result}">
       <div>${file.name}</div>
     `
       container.appendChild(div);
@@ -39,9 +38,15 @@ export function processSelectedFiles(files) {
         }]
       }).then((data) => {
         console.log(data.responses,"RESPONSE")
-        container.addEventListener('click',(e) => {
-
-          console.log(e);
+        const img = document.querySelector('img')
+        img.addEventListener('click', (e) => {
+           console.log(e,"HERE EVENT");
+          const removeclassName = "thumb"
+          const className = "thumb-zoom"
+            img.classList.remove(removeclassName)
+          if(removeclassName){
+            img.classList.add(className)
+          }
         })
       })
     })

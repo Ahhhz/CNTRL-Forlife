@@ -27,31 +27,13 @@
    margin-bottom: 30px;
  }
 
-.thumb:focus{
-  transform: scale(5.0);
+.thumb-zoom{
+  padding-top: 15%;
   position: relative;
-  bottom: 480px;
+  bottom: 800px;
+  transform: scale(.7);
 }
 
- #progress_bar {
-   margin: 10px 0;
-   padding: 3px;
-   border: 1px solid #000;
-   font-size: 14px;
-   clear: both;
-   opacity: 0;
-   -webkit-transition: opacity 1s linear;
- }
-
- #progress_bar.loading {
-   opacity: 1.0;
- }
-
- #progress_bar .percent {
-   background-color: #99ccff;
-   height: auto;
-   width: 0;
- }
 
 .select{
   position: relative;
