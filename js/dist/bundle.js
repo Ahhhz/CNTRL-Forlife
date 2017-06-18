@@ -79,8 +79,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 exports.processSelectedFiles = processSelectedFiles;
 
 var _ajax = __webpack_require__(1);
@@ -132,26 +130,52 @@ function processSelectedFiles(files) {
           }]
         }).then(function (data) {
           var img = document.querySelector('img');
+          console.log('DATA HERE');
           img.addEventListener('click', function (e) {
-            return overLay(e, img);
-          });
-          var responses = data.responses;
+            overLay(e, img);
+            var responses = data.responses;
 
-          var text = responses[0].textAnnotations;
-          var ogDimensions = responses[0].fullTextAnnotation.pages[0];
+            var text = responses[0].textAnnotations;
+            var ogDimensions = responses[0].fullTextAnnotation.pages[0];
+            var width = ogDimensions.width,
+                height = ogDimensions.height;
 
-          Object.keys(ogDimensions).map(function (val) {
-            var dimensions = ogDimensions[val];
-            console.log(dimensions, "!!!!!!!!!");
-            console.log(typeof dimensions === 'undefined' ? 'undefined' : _typeof(dimensions));
 
-            var _dimensions = _slicedToArray(dimensions, 2),
-                height = _dimensions[0],
-                width = _dimensions[1];
+            handleText(text).forEach(function (current) {
+              var _current = _slicedToArray(current, 4),
+                  v1 = _current[0],
+                  v2 = _current[1],
+                  v3 = _current[2],
+                  v4 = _current[3];
 
-            console.log([height, width]);
-          });
-          console.log("WORD BY WORD:", text, "FULL TEXT:", ogDimensions);
+              var x = v1.x,
+                  y = v1.y;
+
+
+              var imgWidth = document.querySelector('.thumb-zoom').width;
+              var imgHeight = document.querySelector('.thumb-zoom').height;
+
+              var topX = imgWidth / width * x;
+              var topY = imgHeight / height * y;
+              console.log(topX, "X", topY, "Y");
+
+              var div = document.createElement('div');
+              div.style.position = "absolute";
+              div.style.width = "10px";
+              div.style.height = "10px";
+              div.style.border = "1px solid green";
+              div.style.backgroundColor = 'rgba(0,255,0, 0.5)';
+              div.style.zIndex = '10';
+              div.style.top = topY + "px";
+              div.style.left = topX + "px";
+              document.querySelector('.js-image-container').appendChild(div);
+            });
+          }
+
+          // console.log(height,width)
+          // console.log(text,"THIS IS ONLY text")
+
+          );
         });
       });
     } //END FOR OF LOOP
@@ -171,6 +195,12 @@ function processSelectedFiles(files) {
   }
 } //END processSelectedFiles()
 
+
+var handleText = function handleText(text) {
+  return text.slice(1).map(function (item) {
+    return item.boundingPoly.vertices;
+  });
+};
 
 var overLay = function overLay(e, img) {
   var target = e.target;

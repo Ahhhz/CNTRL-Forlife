@@ -39,19 +39,41 @@ export function processSelectedFiles(files) {
           }]
         }).then((data) => {
           const img = document.querySelector('img')
-          img.addEventListener('click',(e) => overLay(e,img))
-          const {responses} = data
-          const text = responses[0].textAnnotations
-          const ogDimensions = responses[0].fullTextAnnotation.pages[0]
+          console.log('DATA HERE')
+          img.addEventListener('click', (e) => {
+            overLay(e, img)
+            const {responses} = data
+            const text = responses[0].textAnnotations
+            const ogDimensions = responses[0].fullTextAnnotation.pages[0]
+            const {width, height} = ogDimensions
 
-          Object.keys(ogDimensions).map((val) => {
-            const dimensions = ogDimensions[val]
-            console.log(dimensions,"!!!!!!!!!");
-            console.log(typeof dimensions)
-            const [height,width] = dimensions
-            console.log([height,width]);
+
+            handleText(text).forEach((current) => {
+              const [v1, v2, v3, v4] = current;
+              const {x,y} = v1;
+
+              const imgWidth = document.querySelector('.thumb-zoom').width;
+              const imgHeight = document.querySelector('.thumb-zoom').height;
+
+              const topX = (imgWidth/width)*x
+              const topY = (imgHeight/height)*y
+              console.log(topX,"X",topY,"Y");
+
+              const div = document.createElement('div')
+              div.style.position = "absolute"
+              div.style.width = "10px"
+              div.style.height = "10px"
+              div.style.border = "1px solid green"
+              div.style.backgroundColor = 'rgba(0,255,0, 0.5)'
+              div.style.zIndex = '10'
+              div.style.top = topY + "px"
+              div.style.left = topX + "px"
+               document.querySelector('.js-image-container').appendChild(div)
+            });
           })
-          console.log("WORD BY WORD:",text,"FULL TEXT:",ogDimensions)
+
+          // console.log(height,width)
+          // console.log(text,"THIS IS ONLY text")
 
       })
     })
@@ -60,13 +82,19 @@ export function processSelectedFiles(files) {
 
 
 
+const handleText = (text) => {
+  return text.slice(1).map((item) => {
+    return item.boundingPoly.vertices
+  })
+}
 
-const overLay =  (e, img) => {
-  const {target} = e
-  const {classList} = target
-  classList.remove('thumb');
-  classList.add('thumb-zoom')
-  const imageCont = document.querySelector('.js-image-container');
+
+const overLay = (e, img) => {
+    const {target} = e
+    const {classList} = target
+    classList.remove('thumb');
+    classList.add('thumb-zoom')
+    const imageCont = document.querySelector('.js-image-container');
     imageCont.style.display = 'block';
     imageCont.appendChild(img)
-  }
+}
