@@ -42,12 +42,22 @@ export function processSelectedFiles(files) {
           img.addEventListener('click',(e) => overLay(e,img))
           const {responses} = data
           const text = responses[0].textAnnotations
-          const fullText = responses[0].fullTextAnnotation
-          console.log("LETTER BY LETTER:",text,"FULL TEXT:",fullText)
+          const ogDimensions = responses[0].fullTextAnnotation.pages[0]
+
+          Object.keys(ogDimensions).map((val) => {
+            const dimensions = ogDimensions[val]
+            console.log(dimensions,"!!!!!!!!!");
+            console.log(typeof dimensions)
+            const [height,width] = dimensions
+            console.log([height,width]);
+          })
+          console.log("WORD BY WORD:",text,"FULL TEXT:",ogDimensions)
+
       })
     })
   }//END FOR OF LOOP
 }//END processSelectedFiles()
+
 
 
 
@@ -57,6 +67,6 @@ const overLay =  (e, img) => {
   classList.remove('thumb');
   classList.add('thumb-zoom')
   const imageCont = document.querySelector('.js-image-container');
-  imageCont.style.display = 'block';
-  imageCont.appendChild(img)
-};
+    imageCont.style.display = 'block';
+    imageCont.appendChild(img)
+  }
