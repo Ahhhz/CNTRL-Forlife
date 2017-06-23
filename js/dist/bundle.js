@@ -83,8 +83,6 @@ exports.processSelectedFiles = processSelectedFiles;
 
 var _ajax = __webpack_require__(1);
 
-// import {mapper} from './apiMapper'
-
 var getFileData = function getFileData(file) {
   return new Promise(function (resolve, reject) {
     var reader = new FileReader();
@@ -118,7 +116,7 @@ function processSelectedFiles(files) {
         div.innerHTML = '<div id="progress" >' + loaded + '</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
         container.appendChild(div);
         console.log("HERE BEFORE DATA");
-        ///zoom picture and draw one box over it
+
         (0, _ajax.POST)('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
           requests: [{
             image: {
@@ -141,7 +139,10 @@ function processSelectedFiles(files) {
                 height = ogDimensions.height;
 
 
-            handleText(text).forEach(function (current) {
+            handleText(text).forEach(function (_ref2) {
+              var current = _ref2.current,
+                  text = _ref2.text;
+
               var _current = _slicedToArray(current, 4),
                   v1 = _current[0],
                   v2 = _current[1],
@@ -150,32 +151,55 @@ function processSelectedFiles(files) {
 
               var x = v1.x,
                   y = v1.y;
+              var x2 = v2.x,
+                  y2 = v2.y;
+              var x3 = v3.x,
+                  y3 = v3.y;
+              var x4 = v4.x,
+                  y4 = v4.y;
 
 
-              var imgWidth = document.querySelector('.thumb-zoom').width;
-              var imgHeight = document.querySelector('.thumb-zoom').height;
+              console.log('TEXT is', text
 
-              var topX = imgWidth / width * x;
-              var topY = imgHeight / height * y;
-              console.log(topX, "X", topY, "Y");
+              // console.log(current)
+
+              );console.log("THIS IS X2 & Y2:", x2, y2);
+
+              console.log("________________________");
+
+              console.log("THIS IS X3 & Y3:", x3, y3);
+              console.log("________________________");
+
+              console.log("THIS IS X4 & Y4:", x4, y4);
+
+              console.log(x2 - x, "diff between x2-x");
+
+              console.log(y3 - y2, "diff between y3-y2");
+
+              console.log("___________END__________");
+
+              var compImgWidth = document.querySelector('.thumb-zoom').width;
+              var compImgHeight = document.querySelector('.thumb-zoom').height;
+
+              var topX = compImgWidth / width * x;
+              var topY = compImgHeight / height * y;
+
+              console.log(topX, "topX", topY, "topY");
 
               var div = document.createElement('div');
+              div.classList.add('js-box', 'js-word-' + text.toLowerCase());
+              div.setAttribute('data-text', text);
               div.style.position = "absolute";
-              div.style.width = "10px";
-              div.style.height = "10px";
+              div.style.width = x2 - x + "px";
+              div.style.height = y3 - y2 + "px";
               div.style.border = "1px solid green";
-              div.style.backgroundColor = 'rgba(0,255,0, 0.5)';
+              // div.style.backgroundColor = 'rgba(0,255,0, 0.5)'
               div.style.zIndex = '10';
               div.style.top = topY + "px";
               div.style.left = topX + "px";
               document.querySelector('.js-image-container').appendChild(div);
             });
-          }
-
-          // console.log(height,width)
-          // console.log(text,"THIS IS ONLY text")
-
-          );
+          });
         });
       });
     } //END FOR OF LOOP
@@ -198,7 +222,8 @@ function processSelectedFiles(files) {
 
 var handleText = function handleText(text) {
   return text.slice(1).map(function (item) {
-    return item.boundingPoly.vertices;
+    console.log(item, "THIS IS EACH ITEM IN TEXT");
+    return { current: item.boundingPoly.vertices, text: item.description };
   });
 };
 
@@ -212,6 +237,23 @@ var overLay = function overLay(e, img) {
   imageCont.style.display = 'block';
   imageCont.appendChild(img);
 };
+
+// I don't have the API response in front of me so this is approximate
+// given:
+
+// {
+//     v1: {x: 10, y: 15},
+//     v2: {x: 30, y:15},
+//     v3: {x:30, y: 0},
+//     v4: {x: 10, y: 0},
+// }
+
+// Notice that v1.y and v2.y are the same right? This means you can cacluate
+// the *width* of your box by subtracting v2.x - v1.x
+// Same approach for the y axis.
+// I assume that's what has you tripped up. Let me know if you run into issues and catch
+// me early in class tmr if possible.
+// I think I told ling I'd speak to her first but you can be next in line
 
 /***/ }),
 /* 1 */

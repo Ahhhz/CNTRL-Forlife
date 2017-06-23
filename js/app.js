@@ -1,5 +1,5 @@
 import {POST} from './ajax';
-// import {mapper} from './apiMapper'
+
 
 const getFileData = (file) => {
 return new Promise((resolve, reject) => {
@@ -27,7 +27,7 @@ export function processSelectedFiles(files) {
     `
       container.appendChild(div);
       console.log("HERE BEFORE DATA");
-      ///zoom picture and draw one box over it
+
       POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
         requests: [{
           image: {
@@ -48,32 +48,56 @@ export function processSelectedFiles(files) {
             const {width, height} = ogDimensions
 
 
-            handleText(text).forEach((current) => {
+            handleText(text).forEach(({current, text}) => {
               const [v1, v2, v3, v4] = current;
               const {x,y} = v1;
+              const{x:x2, y:y2} = v2;
+              const{x:x3, y:y3} = v3;
+              const{x:x4, y:y4} = v4;
 
-              const imgWidth = document.querySelector('.thumb-zoom').width;
-              const imgHeight = document.querySelector('.thumb-zoom').height;
+              console.log('TEXT is', text)
 
-              const topX = (imgWidth/width)*x
-              const topY = (imgHeight/height)*y
-              console.log(topX,"X",topY,"Y");
+              // console.log(current)
+
+              console.log("THIS IS X2 & Y2:",x2,y2);
+
+              console.log("________________________");
+
+              console.log("THIS IS X3 & Y3:",x3,y3);
+              console.log("________________________");
+
+              console.log("THIS IS X4 & Y4:",x4,y4);
+
+              console.log(x2-x,"diff between x2-x");
+
+              console.log(y3-y2,"diff between y3-y2");
+
+              console.log("___________END__________");
+
+
+
+              const compImgWidth = document.querySelector('.thumb-zoom').width;
+              const compImgHeight = document.querySelector('.thumb-zoom').height;
+
+              const topX = (compImgWidth/width)*x
+              const topY = (compImgHeight/height)*y
+
+              console.log(topX,"topX",topY,"topY");
 
               const div = document.createElement('div')
+                    div.classList.add('js-box', `js-word-${text.toLowerCase()}`)
+              div.setAttribute('data-text', text)
               div.style.position = "absolute"
-              div.style.width = "10px"
-              div.style.height = "10px"
+              div.style.width = (x2-x) + "px"
+              div.style.height = (y3-y2) + "px"
               div.style.border = "1px solid green"
-              div.style.backgroundColor = 'rgba(0,255,0, 0.5)'
+              // div.style.backgroundColor = 'rgba(0,255,0, 0.5)'
               div.style.zIndex = '10'
               div.style.top = topY + "px"
               div.style.left = topX + "px"
                document.querySelector('.js-image-container').appendChild(div)
             });
           })
-
-          // console.log(height,width)
-          // console.log(text,"THIS IS ONLY text")
 
       })
     })
@@ -84,7 +108,8 @@ export function processSelectedFiles(files) {
 
 const handleText = (text) => {
   return text.slice(1).map((item) => {
-    return item.boundingPoly.vertices
+    console.log(item,"THIS IS EACH ITEM IN TEXT");
+    return {current: item.boundingPoly.vertices, text: item.description}
   })
 }
 
@@ -98,3 +123,24 @@ const overLay = (e, img) => {
     imageCont.style.display = 'block';
     imageCont.appendChild(img)
 }
+
+
+
+
+
+// I don't have the API response in front of me so this is approximate
+// given:
+
+// {
+//     v1: {x: 10, y: 15},
+//     v2: {x: 30, y:15},
+//     v3: {x:30, y: 0},
+//     v4: {x: 10, y: 0},
+// }
+
+// Notice that v1.y and v2.y are the same right? This means you can cacluate
+// the *width* of your box by subtracting v2.x - v1.x
+// Same approach for the y axis.
+// I assume that's what has you tripped up. Let me know if you run into issues and catch
+// me early in class tmr if possible.
+// I think I told ling I'd speak to her first but you can be next in line
