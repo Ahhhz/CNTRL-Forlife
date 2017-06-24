@@ -1,7 +1,6 @@
 import {processSelectedFiles} from './app'
 
 
-
   //DRAG AND DROP
    const dropzone = document.querySelector('#dropzone')
    dropzone.addEventListener("dragover", (e) => {

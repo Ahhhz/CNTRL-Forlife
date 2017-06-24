@@ -74,3 +74,15 @@ output{
   background-color: #D5DBDB;
   display: none;
 }
+
+.js-box{
+  position: absolute;
+  border: 1px solid green;
+  z-index: 10;
+  /*background-color: rgba(0,255,0, 0.5)*/
+}
+
+#js-search{
+  width: 30%;
+  
+}
