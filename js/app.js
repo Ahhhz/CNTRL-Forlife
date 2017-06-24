@@ -107,14 +107,17 @@ export function processSelectedFiles(files) {
             })
 
 
-           input.addEventListener('change',(e) => {
+           input.addEventListener('change', (e) => {
              const{target} = e
              const{value} = target
              const search = value
              const result = fuse.search(search)
              const [payOff] = result
              const {title} = payOff
+
              console.log(title,"HERE IN SEARCH")
+             Array.from(document.querySelectorAll('.js-box')).forEach(el => el.style.opacity = '0');
+             Array.from(document.querySelectorAll(`.js-word-${title.toLowerCase()}`)).forEach(el => el.style.opacity = '1')
            })
 
           })//EVENTLISTENER
@@ -145,5 +148,3 @@ const overLay = (e, img) => {
     imageCont.appendChild(img)
     imageCont.appendChild(input)
 }
-// Array.from(document.querySelectorAll('.js-box')).forEach(el => el.style.opacity = '0');
-// Array.from(document.querySelectorAll(`js-word-${text.toLowerCase()}`)).forEach(el => el.style.opacity = '1')

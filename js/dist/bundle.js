@@ -221,7 +221,14 @@ function processSelectedFiles(files) {
 
               var title = payOff.title;
 
+
               console.log(title, "HERE IN SEARCH");
+              Array.from(document.querySelectorAll('.js-box')).forEach(function (el) {
+                return el.style.opacity = '0';
+              });
+              Array.from(document.querySelectorAll('.js-word-' + title.toLowerCase())).forEach(function (el) {
+                return el.style.opacity = '1';
+              });
             });
           } //EVENTLISTENER
           );
@@ -268,8 +275,6 @@ var overLay = function overLay(e, img) {
   imageCont.appendChild(img);
   imageCont.appendChild(input);
 };
-// Array.from(document.querySelectorAll('.js-box')).forEach(el => el.style.opacity = '0');
-// Array.from(document.querySelectorAll(`js-word-${text.toLowerCase()}`)).forEach(el => el.style.opacity = '1')
 
 /***/ }),
 /* 1 */
