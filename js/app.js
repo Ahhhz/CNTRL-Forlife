@@ -113,6 +113,7 @@ export function processSelectedFiles(files) {
              const search = value
              const result = fuse.search(search)
              const [payOff] = result
+             console.log(payOff,"PAY");
              const {title} = payOff
              console.log(title,"HERE IN SEARCH")
              Array.from(document.querySelectorAll('.js-box')).forEach(el => el.style.opacity = '0');

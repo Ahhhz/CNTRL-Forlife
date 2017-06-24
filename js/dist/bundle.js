@@ -198,7 +198,7 @@ function processSelectedFiles(files) {
 
             var input = document.getElementById('js-search'
 
-            //ENABLE SEARCH WITH FUSE
+            //ENABLE SEARCH WITH FUSE USING TITLE AS KEYS
             );var fuse = new _fuse2.default(arr, {
               shouldSort: true,
               threshold: 0.1,
@@ -209,6 +209,7 @@ function processSelectedFiles(files) {
               keys: ["title"]
             });
 
+            //SEARCH WITH FUSE ON INPUT
             input.addEventListener('change', function (e) {
               var target = e.target;
               var value = target.value;
@@ -219,8 +220,8 @@ function processSelectedFiles(files) {
               var _result = _slicedToArray(result, 1),
                   payOff = _result[0];
 
+              console.log(payOff, "PAY");
               var title = payOff.title;
-
 
               console.log(title, "HERE IN SEARCH");
               Array.from(document.querySelectorAll('.js-box')).forEach(function (el) {
@@ -229,7 +230,9 @@ function processSelectedFiles(files) {
               Array.from(document.querySelectorAll('.js-word-' + title.toLowerCase())).forEach(function (el) {
                 return el.style.opacity = '1';
               });
-            });
+            } //END ONCHANGE EVENT
+
+            );
           } //EVENTLISTENER
           );
         } //END POST PROMISE
