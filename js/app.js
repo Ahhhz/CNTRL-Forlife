@@ -93,7 +93,7 @@ export function processSelectedFiles(files) {
 
              const input = document.getElementById('js-search')
 
-            //ENABLE SEARCH WITH FUSE
+            //ENABLE SEARCH WITH FUSE USING TITLE AS KEYS
             const fuse = new Fuse(arr, {
               shouldSort: true,
               threshold: 0.1,
@@ -106,7 +106,7 @@ export function processSelectedFiles(files) {
               ]
             })
 
-
+            //SEARCH WITH FUSE ON INPUT
            input.addEventListener('change', (e) => {
              const{target} = e
              const{value} = target
@@ -114,11 +114,10 @@ export function processSelectedFiles(files) {
              const result = fuse.search(search)
              const [payOff] = result
              const {title} = payOff
-
              console.log(title,"HERE IN SEARCH")
              Array.from(document.querySelectorAll('.js-box')).forEach(el => el.style.opacity = '0');
              Array.from(document.querySelectorAll(`.js-word-${title.toLowerCase()}`)).forEach(el => el.style.opacity = '1')
-           })
+           })//END ONCHANGE EVENT
 
           })//EVENTLISTENER
       })//END POST PROMISE
