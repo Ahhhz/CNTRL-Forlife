@@ -84,5 +84,5 @@ output{
 
 #js-search{
   width: 30%;
-  
+  position: absolute;
 }

@@ -44,7 +44,6 @@ export function processSelectedFiles(files) {
           img.addEventListener('click', (e) => {
             overLay(e, img)
             const {responses} = data
-            // console.log(responses,"RESPONSES HERE");
             const text = responses[0].textAnnotations
             const ogDimensions = responses[0].fullTextAnnotation.pages[0]
             const {width, height} = ogDimensions
@@ -92,6 +91,8 @@ export function processSelectedFiles(files) {
                })
             });//FOR EACH
 
+             const input = document.getElementById('js-search')
+
             //ENABLE SEARCH WITH FUSE
             const fuse = new Fuse(arr, {
               shouldSort: true,
@@ -105,13 +106,23 @@ export function processSelectedFiles(files) {
               ]
             })
 
-           const search = fuse.search("grand")
-           console.log(search,"SEARCHING");
+
+           input.addEventListener('change',(e) => {
+             const{target} = e
+             const{value} = target
+             const search = value
+             const result = fuse.search(search)
+             const [payOff] = result
+             const {title} = payOff
+             console.log(title,"HERE IN SEARCH")
+           })
+
           })//EVENTLISTENER
       })//END POST PROMISE
     })// END GET and READ FILE DATA
   }//END FOR OF LOOP
 }//END processSelectedFiles()
+
 
 
 //HANDLES TEXT DATA FROM IMAGE
@@ -127,12 +138,12 @@ const overLay = (e, img) => {
     const {classList} = target
     classList.remove('thumb');
     classList.add('thumb-zoom')
+    const input = document.getElementById('js-search')
     const imageCont = document.querySelector('.js-image-container');
-    // const input = document.getElementById('js-search')
-    // input.style.visibility = 'visible'
+    input.style.visibility = 'visible'
     imageCont.style.display = 'block';
     imageCont.appendChild(img)
-    // imageCont.appendChild(input)
+    imageCont.appendChild(input)
 }
- const input = document.getElementById('js-search')
- input.style.visibility = 'visible'
+// Array.from(document.querySelectorAll('.js-box')).forEach(el => el.style.opacity = '0');
+// Array.from(document.querySelectorAll(`js-word-${text.toLowerCase()}`)).forEach(el => el.style.opacity = '1')

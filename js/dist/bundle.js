@@ -140,7 +140,6 @@ function processSelectedFiles(files) {
           img.addEventListener('click', function (e) {
             overLay(e, img);
             var responses = data.responses;
-            // console.log(responses,"RESPONSES HERE");
 
             var text = responses[0].textAnnotations;
             var ogDimensions = responses[0].fullTextAnnotation.pages[0];
@@ -197,8 +196,10 @@ function processSelectedFiles(files) {
               });
             }); //FOR EACH
 
+            var input = document.getElementById('js-search'
+
             //ENABLE SEARCH WITH FUSE
-            var fuse = new _fuse2.default(arr, {
+            );var fuse = new _fuse2.default(arr, {
               shouldSort: true,
               threshold: 0.1,
               location: 0,
@@ -208,8 +209,20 @@ function processSelectedFiles(files) {
               keys: ["title"]
             });
 
-            var search = fuse.search("grand");
-            console.log(search, "SEARCHING");
+            input.addEventListener('change', function (e) {
+              var target = e.target;
+              var value = target.value;
+
+              var search = value;
+              var result = fuse.search(search);
+
+              var _result = _slicedToArray(result, 1),
+                  payOff = _result[0];
+
+              var title = payOff.title;
+
+              console.log(title, "HERE IN SEARCH");
+            });
           } //EVENTLISTENER
           );
         } //END POST PROMISE
@@ -248,16 +261,15 @@ var overLay = function overLay(e, img) {
 
   classList.remove('thumb');
   classList.add('thumb-zoom');
+  var input = document.getElementById('js-search');
   var imageCont = document.querySelector('.js-image-container');
-  // const input = document.getElementById('js-search')
-  // input.style.visibility = 'visible'
+  input.style.visibility = 'visible';
   imageCont.style.display = 'block';
-  imageCont.appendChild(img
-  // imageCont.appendChild(input)
-  );
+  imageCont.appendChild(img);
+  imageCont.appendChild(input);
 };
-var input = document.getElementById('js-search');
-input.style.visibility = 'visible';
+// Array.from(document.querySelectorAll('.js-box')).forEach(el => el.style.opacity = '0');
+// Array.from(document.querySelectorAll(`js-word-${text.toLowerCase()}`)).forEach(el => el.style.opacity = '1')
 
 /***/ }),
 /* 1 */
