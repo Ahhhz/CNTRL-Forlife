@@ -24,3 +24,7 @@ Google Cloud Vision API(OCR) https://cloud.google.com/functions/docs/tutorials/o
 FE Framework
 
 Bootstrap http://getbootstrap.com/
+
+Site on Github pages
+
+https://ahhhz.github.io/finalProject/index.html
