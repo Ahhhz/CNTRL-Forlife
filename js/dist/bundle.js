@@ -97,28 +97,19 @@ var getFileData = function getFileData(file) {
   });
 };
 
-var updateProgress = function updateProgress(e) {
-  // evt is an ProgressEvent.
-  if (e.lengthComputable) {
-    var percentLoaded = Math.round(e.loaded / e.total * 100);
-    // Increase the progress bar length.
-    if (percentLoaded < 100) {
-      progress.style.width = percentLoaded + '%';
-      progress.textContent = percentLoaded + '%';
-    }
-  }
-};
-
 var arr = exports.arr = [];
 var input = document.getElementById('js-search');
 //RENDER IMAGE AND POST CALL TO API
 function processSelectedFiles(files) {
+
+  var container = document.querySelector('.js-container');
+  container.innerHTML = "";
+
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
 
   try {
-
     for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var file = _step.value;
 
@@ -129,13 +120,15 @@ function processSelectedFiles(files) {
         var target = e.target,
             loaded = e.loaded;
 
-        var container = document.querySelector('.js-container');
+        console.log(e, "EEEE");
+        console.log(reader, "READER");
+
         var div = document.createElement('div');
 
-        div.innerHTML = '<div class="progress" >' + loaded + '%</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
+        div.innerHTML = '<div id="progress" >' + loaded + '%</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
         container.appendChild(div);
-        var prog = document.querySelector(".progress");
-        console.log(prog, "PROG");
+        // console.log(loaded,"LOAD");
+
         console.log("HERE BEFORE DATA");
 
         (0, _ajax.POST)('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
@@ -178,8 +171,7 @@ function processSelectedFiles(files) {
               var x3 = v3.x,
                   y3 = v3.y;
               var x4 = v4.x,
-                  y4 = v4.y; //
-              // console.log(current,text,"_______");
+                  y4 = v4.y;
 
               //COMPUTED IMAGE width&height
 

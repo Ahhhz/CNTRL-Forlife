@@ -1,10 +1,11 @@
 import {POST} from './ajax';
 import {handleChange} from './search';
 
+
 // GETS FILE DATA IN PROMISE AND READS IMAGE DATA AS URL
 const getFileData = (file) => {
 return new Promise((resolve, reject) => {
-    const reader = new FileReader();
+  const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       resolve({file, e, reader});
@@ -12,36 +13,29 @@ return new Promise((resolve, reject) => {
   })
 };
 
-const updateProgress = (e) => {
-  // evt is an ProgressEvent.
-  if (e.lengthComputable) {
-    const percentLoaded = Math.round((e.loaded / e.total) * 100);
-    // Increase the progress bar length.
-    if (percentLoaded < 100) {
-      progress.style.width = percentLoaded + '%';
-      progress.textContent = percentLoaded + '%';
-    }
-  }
-}
-
 export const arr = [];
 const input = document.getElementById('js-search');
  //RENDER IMAGE AND POST CALL TO API
 export function processSelectedFiles(files) {
 
+   const container = document.querySelector('.js-container')
+   container.innerHTML = ""
+
   for (const file of files) {
     getFileData(file).then(({file, e, reader}) => {
       const {target,loaded} = e
-      const container = document.querySelector('.js-container')
+      console.log(e,"EEEE");
+      console.log(reader,"READER");
+
       const div = document.createElement('div');
 
-      div.innerHTML = `<div class="progress" >${loaded}%</div>
+      div.innerHTML = `<div id="progress" >${loaded}%</div>
       <img class="thumb" alt="${file.name}" src="${target.result}">
       <div>${file.name}</div>
     `
       container.appendChild(div);
-     const prog = document.querySelector(".progress")
-     console.log(prog,"PROG");
+      // console.log(loaded,"LOAD");
+
       console.log("HERE BEFORE DATA");
 
       POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
@@ -69,8 +63,8 @@ export function processSelectedFiles(files) {
               const {x,y} = v1;
               const{x:x2, y:y2} = v2;
               const{x:x3, y:y3} = v3;
-              const{x:x4, y:y4} = v4;//
-              // console.log(current,text,"_______");
+              const{x:x4, y:y4} = v4;
+
 
               //COMPUTED IMAGE width&height
               const compImgWidth = document.querySelector('.thumb-zoom').width;
@@ -109,7 +103,6 @@ export function processSelectedFiles(files) {
     })// END GET and READ FILE DATA
   }//END FOR OF LOOP
 }//END processSelectedFiles()
-
 
 
 //HANDLES TEXT DATA FROM IMAGE
