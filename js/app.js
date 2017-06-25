@@ -23,12 +23,12 @@ export function processSelectedFiles(files) {
 
   for (const file of files) {
     getFileData(file).then(({file, e, reader}) => {
-      const {target,loaded} = e
+      const {target,loaded,lengthComputable} = e
       console.log(e,"EEEE");
       const div = document.createElement('div');
 
 
-      div.innerHTML = `<div id="progress" >0%</div>
+      div.innerHTML = `
       <img class="thumb" alt="${file.name}" src="${target.result}">
       <div>${file.name}</div>
     `
@@ -48,7 +48,7 @@ export function processSelectedFiles(files) {
         })
         .then((data) => {
           const img = document.querySelector('img')
-
+          console.log(data,"TRUE DATA");
           console.log('DATA HERE')
           img.addEventListener('click', (e) => {
             overLay(e, img)
@@ -98,6 +98,7 @@ export function processSelectedFiles(files) {
              handleChange(e,title)
            })//END ONCHANGE EVENT
           })//EVENTLISTENER
+          img.click();
       })//END POST PROMISE
     })// END GET and READ FILE DATA
   }//END FOR OF LOOP
@@ -112,7 +113,7 @@ const handleText = (text) => {
   })
 }
 
-//CREATES OUR OVERLAY VIEW OF OUR IMAGE DOCUMENT
+//CREATES OUR OVERLAY VIEW OF OUR IMAGE DOCUMENT e {target,classList} point to the evt for classLists
 const overLay = (e, img) => {
     const {target} = e
     const {classList} = target

@@ -118,12 +118,13 @@ function processSelectedFiles(files) {
             e = _ref.e,
             reader = _ref.reader;
         var target = e.target,
-            loaded = e.loaded;
+            loaded = e.loaded,
+            lengthComputable = e.lengthComputable;
 
         console.log(e, "EEEE");
         var div = document.createElement('div');
 
-        div.innerHTML = '<div id="progress" >0%</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
+        div.innerHTML = '\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
         container.appendChild(div);
 
         console.log("HERE BEFORE DATA");
@@ -139,7 +140,7 @@ function processSelectedFiles(files) {
           }]
         }).then(function (data) {
           var img = document.querySelector('img');
-
+          console.log(data, "TRUE DATA");
           console.log('DATA HERE');
           img.addEventListener('click', function (e) {
             overLay(e, img);
@@ -205,7 +206,7 @@ function processSelectedFiles(files) {
             } //END ONCHANGE EVENT
             );
           } //EVENTLISTENER
-          );
+          );img.click();
         } //END POST PROMISE
         );
       } // END GET and READ FILE DATA
@@ -235,7 +236,7 @@ var handleText = function handleText(text) {
   });
 };
 
-//CREATES OUR OVERLAY VIEW OF OUR IMAGE DOCUMENT
+//CREATES OUR OVERLAY VIEW OF OUR IMAGE DOCUMENT e {target,classList} point to the evt for classLists
 var overLay = function overLay(e, img) {
   var target = e.target;
   var classList = target.classList;
@@ -344,7 +345,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var handleChange = exports.handleChange = function handleChange(e) {
   var fuse = new _fuse2.default(_app.arr, {
     shouldSort: true,
-    threshold: 0.1,
+    threshold: 0.0,
     location: 0,
     distance: 100,
     maxPatternLength: 32,

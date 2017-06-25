@@ -5,7 +5,7 @@ import {arr} from './app'
 export const handleChange = (e) => {
   const fuse = new Fuse(arr, {
     shouldSort: true,
-    threshold: 0.1,
+    threshold: 0.0,
     location: 0,
     distance: 100,
     maxPatternLength: 32,
