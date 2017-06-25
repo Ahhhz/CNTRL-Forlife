@@ -1,7 +1,7 @@
 import {POST} from './ajax';
-import Fuse from 'fuse.js';
+import {handleChange} from './search';
 
-//GETS FILE DATA IN PROMISE AND READS IMAGE DATA AS URL
+// GETS FILE DATA IN PROMISE AND READS IMAGE DATA AS URL
 const getFileData = (file) => {
 return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -12,21 +12,36 @@ return new Promise((resolve, reject) => {
   })
 };
 
+const updateProgress = (e) => {
+  // evt is an ProgressEvent.
+  if (e.lengthComputable) {
+    const percentLoaded = Math.round((e.loaded / e.total) * 100);
+    // Increase the progress bar length.
+    if (percentLoaded < 100) {
+      progress.style.width = percentLoaded + '%';
+      progress.textContent = percentLoaded + '%';
+    }
+  }
+}
 
-const arr = [];
+export const arr = [];
+const input = document.getElementById('js-search');
  //RENDER IMAGE AND POST CALL TO API
 export function processSelectedFiles(files) {
+
   for (const file of files) {
     getFileData(file).then(({file, e, reader}) => {
       const {target,loaded} = e
       const container = document.querySelector('.js-container')
       const div = document.createElement('div');
 
-      div.innerHTML = `<div id="progress" >${loaded}</div>
+      div.innerHTML = `<div class="progress" >${loaded}%</div>
       <img class="thumb" alt="${file.name}" src="${target.result}">
       <div>${file.name}</div>
     `
       container.appendChild(div);
+     const prog = document.querySelector(".progress")
+     console.log(prog,"PROG");
       console.log("HERE BEFORE DATA");
 
       POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
@@ -47,11 +62,6 @@ export function processSelectedFiles(files) {
             const text = responses[0].textAnnotations
             const ogDimensions = responses[0].fullTextAnnotation.pages[0]
             const {width, height} = ogDimensions
-
-
-
-
-
 
             handleText(text).forEach(({current, text}) => {
               //VERTICES FOR OUR div box around each word
@@ -84,40 +94,14 @@ export function processSelectedFiles(files) {
                     div.style.left = topX + "px"
                     imgContainer.appendChild(div)
 
-
-
                arr.push({
                  title: text
                })
             });//FOR EACH
 
-             const input = document.getElementById('js-search')
-
-            //ENABLE SEARCH WITH FUSE USING TITLE AS KEYS
-            const fuse = new Fuse(arr, {
-              shouldSort: true,
-              threshold: 0.1,
-              location: 0,
-              distance: 100,
-              maxPatternLength: 32,
-              minMatchCharLength: 1,
-              keys: [
-                "title",
-              ]
-            })
-
             //SEARCH WITH FUSE ON INPUT
-           input.addEventListener('change', (e) => {
-             const{target} = e
-             const{value} = target
-             const search = value
-             const result = fuse.search(search)
-             const [payOff] = result
-             console.log(payOff,"PAY");
-             const {title} = payOff
-             console.log(title,"HERE IN SEARCH")
-             Array.from(document.querySelectorAll('.js-box')).forEach(el => el.style.opacity = '0');
-             Array.from(document.querySelectorAll(`.js-word-${title.toLowerCase()}`)).forEach(el => el.style.opacity = '1')
+           input.addEventListener('change', (e,title) => {
+             handleChange(e,title)
            })//END ONCHANGE EVENT
 
           })//EVENTLISTENER
@@ -141,10 +125,9 @@ const overLay = (e, img) => {
     const {classList} = target
     classList.remove('thumb');
     classList.add('thumb-zoom')
-    const input = document.getElementById('js-search')
     const imageCont = document.querySelector('.js-image-container');
     input.style.visibility = 'visible'
     imageCont.style.display = 'block';
     imageCont.appendChild(img)
     imageCont.appendChild(input)
-}
+}//END OVERLAY

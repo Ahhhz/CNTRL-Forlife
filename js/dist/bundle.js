@@ -76,6 +76,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.arr = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -83,13 +84,9 @@ exports.processSelectedFiles = processSelectedFiles;
 
 var _ajax = __webpack_require__(1);
 
-var _fuse = __webpack_require__(3);
+var _search = __webpack_require__(3);
 
-var _fuse2 = _interopRequireDefault(_fuse);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//GETS FILE DATA IN PROMISE AND READS IMAGE DATA AS URL
+// GETS FILE DATA IN PROMISE AND READS IMAGE DATA AS URL
 var getFileData = function getFileData(file) {
   return new Promise(function (resolve, reject) {
     var reader = new FileReader();
@@ -100,7 +97,20 @@ var getFileData = function getFileData(file) {
   });
 };
 
-var arr = [];
+var updateProgress = function updateProgress(e) {
+  // evt is an ProgressEvent.
+  if (e.lengthComputable) {
+    var percentLoaded = Math.round(e.loaded / e.total * 100);
+    // Increase the progress bar length.
+    if (percentLoaded < 100) {
+      progress.style.width = percentLoaded + '%';
+      progress.textContent = percentLoaded + '%';
+    }
+  }
+};
+
+var arr = exports.arr = [];
+var input = document.getElementById('js-search');
 //RENDER IMAGE AND POST CALL TO API
 function processSelectedFiles(files) {
   var _iteratorNormalCompletion = true;
@@ -108,6 +118,7 @@ function processSelectedFiles(files) {
   var _iteratorError = undefined;
 
   try {
+
     for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var file = _step.value;
 
@@ -121,8 +132,10 @@ function processSelectedFiles(files) {
         var container = document.querySelector('.js-container');
         var div = document.createElement('div');
 
-        div.innerHTML = '<div id="progress" >' + loaded + '</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
+        div.innerHTML = '<div class="progress" >' + loaded + '%</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
         container.appendChild(div);
+        var prog = document.querySelector(".progress");
+        console.log(prog, "PROG");
         console.log("HERE BEFORE DATA");
 
         (0, _ajax.POST)('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
@@ -196,40 +209,9 @@ function processSelectedFiles(files) {
               });
             }); //FOR EACH
 
-            var input = document.getElementById('js-search'
-
-            //ENABLE SEARCH WITH FUSE USING TITLE AS KEYS
-            );var fuse = new _fuse2.default(arr, {
-              shouldSort: true,
-              threshold: 0.1,
-              location: 0,
-              distance: 100,
-              maxPatternLength: 32,
-              minMatchCharLength: 1,
-              keys: ["title"]
-            });
-
             //SEARCH WITH FUSE ON INPUT
-            input.addEventListener('change', function (e) {
-              var target = e.target;
-              var value = target.value;
-
-              var search = value;
-              var result = fuse.search(search);
-
-              var _result = _slicedToArray(result, 1),
-                  payOff = _result[0];
-
-              console.log(payOff, "PAY");
-              var title = payOff.title;
-
-              console.log(title, "HERE IN SEARCH");
-              Array.from(document.querySelectorAll('.js-box')).forEach(function (el) {
-                return el.style.opacity = '0';
-              });
-              Array.from(document.querySelectorAll('.js-word-' + title.toLowerCase())).forEach(function (el) {
-                return el.style.opacity = '1';
-              });
+            input.addEventListener('change', function (e, title) {
+              (0, _search.handleChange)(e, title);
             } //END ONCHANGE EVENT
 
             );
@@ -271,13 +253,12 @@ var overLay = function overLay(e, img) {
 
   classList.remove('thumb');
   classList.add('thumb-zoom');
-  var input = document.getElementById('js-search');
   var imageCont = document.querySelector('.js-image-container');
   input.style.visibility = 'visible';
   imageCont.style.display = 'block';
   imageCont.appendChild(img);
   imageCont.appendChild(input);
-};
+}; //END OVERLAY
 
 /***/ }),
 /* 1 */
@@ -342,6 +323,59 @@ dropzone.addEventListener("drop", function (e) {
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleChange = undefined;
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _fuse = __webpack_require__(4);
+
+var _fuse2 = _interopRequireDefault(_fuse);
+
+var _app = __webpack_require__(0);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//HANDLE CHANGE ON INPUT WITH FUSE.JS
+var handleChange = exports.handleChange = function handleChange(e) {
+  var fuse = new _fuse2.default(_app.arr, {
+    shouldSort: true,
+    threshold: 0.1,
+    location: 0,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 1,
+    keys: ["title"]
+  });
+  var target = e.target;
+  var value = target.value;
+
+  var search = value;
+  var result = fuse.search(search);
+
+  var _result = _slicedToArray(result, 1),
+      payOff = _result[0];
+
+  console.log(payOff, "PAY");
+  var title = payOff.title;
+
+  Array.from(document.querySelectorAll('.js-box')).forEach(function (el) {
+    return el.style.opacity = '0';
+  });
+  Array.from(document.querySelectorAll('.js-word-' + title.toLowerCase())).forEach(function (el) {
+    return el.style.opacity = '1';
+  });
+}; //END ONCHANGE
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
