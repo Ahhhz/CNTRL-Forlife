@@ -1,4 +1,4 @@
-import {POST} from './ajax';
+import {POST,URL} from './ajax';
 import {handleChange} from './search';
 
 
@@ -25,20 +25,18 @@ export function processSelectedFiles(files) {
     getFileData(file).then(({file, e, reader}) => {
       const {target,loaded} = e
       console.log(e,"EEEE");
-      console.log(reader,"READER");
-
       const div = document.createElement('div');
 
-      div.innerHTML = `<div id="progress" >${loaded}%</div>
+
+      div.innerHTML = `<div id="progress" >0%</div>
       <img class="thumb" alt="${file.name}" src="${target.result}">
       <div>${file.name}</div>
     `
       container.appendChild(div);
-      // console.log(loaded,"LOAD");
 
       console.log("HERE BEFORE DATA");
 
-      POST('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+      POST(URL,{
         requests: [{
           image: {
             content: div.querySelector('img').getAttribute('src').split('data:image/jpeg;base64,').pop()
@@ -47,8 +45,10 @@ export function processSelectedFiles(files) {
             type: "TEXT_DETECTION",
             }]
           }]
-        }).then((data) => {
+        })
+        .then((data) => {
           const img = document.querySelector('img')
+
           console.log('DATA HERE')
           img.addEventListener('click', (e) => {
             overLay(e, img)
@@ -97,12 +97,12 @@ export function processSelectedFiles(files) {
            input.addEventListener('change', (e,title) => {
              handleChange(e,title)
            })//END ONCHANGE EVENT
-
           })//EVENTLISTENER
       })//END POST PROMISE
     })// END GET and READ FILE DATA
   }//END FOR OF LOOP
 }//END processSelectedFiles()
+
 
 
 //HANDLES TEXT DATA FROM IMAGE

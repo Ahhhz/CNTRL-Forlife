@@ -15,3 +15,13 @@ export const POST = (url, data) => {
     http.send(JSON.stringify(data));
   });
 } //POST
+
+const APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
+const PROTOCOL = 'https:';
+const APIVERSION = 'v1';
+const BASEURL = 'vision.googleapis.com';
+const QUERY = 'images:annotate?';
+
+
+
+export const URL = `${PROTOCOL}${BASEURL}/${APIVERSION}/${QUERY}${APIKEY}`

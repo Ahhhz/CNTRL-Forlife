@@ -121,17 +121,14 @@ function processSelectedFiles(files) {
             loaded = e.loaded;
 
         console.log(e, "EEEE");
-        console.log(reader, "READER");
-
         var div = document.createElement('div');
 
-        div.innerHTML = '<div id="progress" >' + loaded + '%</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
+        div.innerHTML = '<div id="progress" >0%</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
         container.appendChild(div);
-        // console.log(loaded,"LOAD");
 
         console.log("HERE BEFORE DATA");
 
-        (0, _ajax.POST)('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE', {
+        (0, _ajax.POST)(_ajax.URL, {
           requests: [{
             image: {
               content: div.querySelector('img').getAttribute('src').split('data:image/jpeg;base64,').pop()
@@ -142,6 +139,7 @@ function processSelectedFiles(files) {
           }]
         }).then(function (data) {
           var img = document.querySelector('img');
+
           console.log('DATA HERE');
           img.addEventListener('click', function (e) {
             overLay(e, img);
@@ -205,7 +203,6 @@ function processSelectedFiles(files) {
             input.addEventListener('change', function (e, title) {
               (0, _search.handleChange)(e, title);
             } //END ONCHANGE EVENT
-
             );
           } //EVENTLISTENER
           );
@@ -279,6 +276,14 @@ var POST = exports.POST = function POST(url, data) {
     http.send(JSON.stringify(data));
   });
 }; //POST
+
+var APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
+var PROTOCOL = 'https:';
+var APIVERSION = 'v1';
+var BASEURL = 'vision.googleapis.com';
+var QUERY = 'images:annotate?';
+
+var URL = exports.URL = '' + PROTOCOL + BASEURL + '/' + APIVERSION + '/' + QUERY + APIKEY;
 
 /***/ }),
 /* 2 */
