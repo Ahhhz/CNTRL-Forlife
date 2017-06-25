@@ -24,7 +24,6 @@ export function processSelectedFiles(files) {
   for (const file of files) {
     getFileData(file).then(({file, e, reader}) => {
       const {target,loaded,lengthComputable} = e
-      console.log(e,"EEEE");
       const div = document.createElement('div');
 
 
@@ -34,7 +33,6 @@ export function processSelectedFiles(files) {
     `
       container.appendChild(div);
 
-      console.log("HERE BEFORE DATA");
 
       POST(URL,{
         requests: [{
@@ -48,8 +46,7 @@ export function processSelectedFiles(files) {
         })
         .then((data) => {
           const img = document.querySelector('img')
-          console.log(data,"TRUE DATA");
-          console.log('DATA HERE')
+          
           img.addEventListener('click', (e) => {
             overLay(e, img)
             const {responses} = data

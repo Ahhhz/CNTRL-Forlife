@@ -121,13 +121,10 @@ function processSelectedFiles(files) {
             loaded = e.loaded,
             lengthComputable = e.lengthComputable;
 
-        console.log(e, "EEEE");
         var div = document.createElement('div');
 
         div.innerHTML = '\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
         container.appendChild(div);
-
-        console.log("HERE BEFORE DATA");
 
         (0, _ajax.POST)(_ajax.URL, {
           requests: [{
@@ -140,8 +137,7 @@ function processSelectedFiles(files) {
           }]
         }).then(function (data) {
           var img = document.querySelector('img');
-          console.log(data, "TRUE DATA");
-          console.log('DATA HERE');
+
           img.addEventListener('click', function (e) {
             overLay(e, img);
             var responses = data.responses;
@@ -361,7 +357,6 @@ var handleChange = exports.handleChange = function handleChange(e) {
   var _result = _slicedToArray(result, 1),
       payOff = _result[0];
 
-  console.log(payOff, "PAY");
   var title = payOff.title;
 
   Array.from(document.querySelectorAll('.js-box')).forEach(function (el) {
