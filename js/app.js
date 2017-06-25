@@ -19,7 +19,6 @@ const input = document.getElementById('js-search');
 export function processSelectedFiles(files) {
 
    const container = document.querySelector('.js-container')
-   container.innerHTML = ""
 
   for (const file of files) {
     getFileData(file).then(({file, e, reader}) => {
@@ -28,8 +27,8 @@ export function processSelectedFiles(files) {
 
 
       div.innerHTML = `
-      <img class="thumb" alt="${file.name}" src="${target.result}">
       <div>${file.name}</div>
+      <img class="thumb" alt="${file.name}" src="${target.result}">
     `
       container.appendChild(div);
 
@@ -46,7 +45,7 @@ export function processSelectedFiles(files) {
         })
         .then((data) => {
           const img = document.querySelector('img')
-          
+
           img.addEventListener('click', (e) => {
             overLay(e, img)
             const {responses} = data

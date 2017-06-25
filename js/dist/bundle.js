@@ -103,7 +103,6 @@ var input = document.getElementById('js-search');
 function processSelectedFiles(files) {
 
   var container = document.querySelector('.js-container');
-  container.innerHTML = "";
 
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
@@ -123,7 +122,7 @@ function processSelectedFiles(files) {
 
         var div = document.createElement('div');
 
-        div.innerHTML = '\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n      <div>' + file.name + '</div>\n    ';
+        div.innerHTML = '\n      <div>' + file.name + '</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n    ';
         container.appendChild(div);
 
         (0, _ajax.POST)(_ajax.URL, {
