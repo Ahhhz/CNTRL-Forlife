@@ -16,7 +16,7 @@ export const POST = (url, data) => {
   });
 } //POST
 
-const APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
+const APIKEY = 'key=';
 const PROTOCOL = 'https:';
 const APIVERSION = 'v1';
 const BASEURL = 'vision.googleapis.com';
