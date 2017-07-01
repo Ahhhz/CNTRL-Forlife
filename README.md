@@ -26,5 +26,4 @@ FE Framework
 Bootstrap http://getbootstrap.com/
 
 Site on Github pages
-
-https://ahhhz.github.io/finalProject/index.html
+https://ahhhz.github.io/CNTRL-Forlife/index.html
