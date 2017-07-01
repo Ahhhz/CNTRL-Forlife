@@ -13,8 +13,7 @@ Install Modules
 npm install
 
 Run
-
-npm run watch(to build bundle on webpack and to transpile code to ES5)
+cd js && npm run watch(to build bundle on webpack and to compile code to ES5)
 
 
 API Framework
