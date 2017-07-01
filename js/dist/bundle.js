@@ -268,18 +268,19 @@ var POST = exports.POST = function POST(url, data) {
         reject(e);
       }
     }; // onload
-
     http.send(JSON.stringify(data));
   });
 }; //POST
 
-var APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
-var PROTOCOL = 'https:';
-var APIVERSION = 'v1';
-var BASEURL = 'vision.googleapis.com';
-var QUERY = 'images:annotate?';
+// const APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
+// const PROTOCOL = 'https:';
+// const APIVERSION = 'v1';
+// const BASEURL = 'vision.googleapis.com';
+// const QUERY = 'images:annotate?';
+//
+// `${PROTOCOL}${BASEURL}/${APIVERSION}/${QUERY}${APIKEY}`
 
-var URL = exports.URL = '' + PROTOCOL + BASEURL + '/' + APIVERSION + '/' + QUERY + APIKEY;
+var URL = exports.URL = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
 
 /***/ }),
 /* 2 */
