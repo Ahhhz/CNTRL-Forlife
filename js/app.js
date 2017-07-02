@@ -93,7 +93,7 @@ export function processSelectedFiles(files) {
            input.addEventListener('change', (e,title) => {
              handleChange(e,title)
            })//END ONCHANGE EVENT
-          })//EVENTLISTENER
+         })//CLICK EVENTLISTENER
           img.click();
       })//END POST PROMISE
     })// END GET and READ FILE DATA

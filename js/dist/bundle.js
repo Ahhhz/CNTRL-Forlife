@@ -200,7 +200,7 @@ function processSelectedFiles(files) {
               (0, _search.handleChange)(e, title);
             } //END ONCHANGE EVENT
             );
-          } //EVENTLISTENER
+          } //CLICK EVENTLISTENER
           );img.click();
         } //END POST PROMISE
         );
@@ -272,15 +272,14 @@ var POST = exports.POST = function POST(url, data) {
   });
 }; //POST
 
-// const APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
-// const PROTOCOL = 'https:';
-// const APIVERSION = 'v1';
-// const BASEURL = 'vision.googleapis.com';
-// const QUERY = 'images:annotate?';
-//
-// `${PROTOCOL}${BASEURL}/${APIVERSION}/${QUERY}${APIKEY}`
 
-var URL = exports.URL = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
+// const APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
+var PROTOCOL = 'https:';
+var APIVERSION = 'v1';
+var BASEURL = 'vision.googleapis.com';
+var QUERY = 'images:annotate?';
+
+var URL = exports.URL = '' + PROTOCOL + BASEURL + '/' + APIVERSION + '/' + QUERY + APIKEY;
 
 /***/ }),
 /* 2 */
@@ -295,7 +294,7 @@ var _app = __webpack_require__(0);
 var dropzone = document.querySelector('#dropzone');
 dropzone.addEventListener("dragover", function (e) {
   e.preventDefault();
-}, false);
+});
 
 dropzone.addEventListener("drop", function (e) {
   e.preventDefault();
@@ -303,7 +302,7 @@ dropzone.addEventListener("drop", function (e) {
   var files = dataTransfer.files;
 
   (0, _app.processSelectedFiles)(files);
-}, false
+}
 //END DRAG AND DROP
 
 //CHOOSE FILE

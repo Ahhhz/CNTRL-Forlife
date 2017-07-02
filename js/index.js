@@ -5,14 +5,14 @@ import {processSelectedFiles} from './app'
    const dropzone = document.querySelector('#dropzone')
    dropzone.addEventListener("dragover", (e) => {
        e.preventDefault();
-   }, false);
+   });
 
    dropzone.addEventListener("drop", (e) => {
      e.preventDefault();
      const {dataTransfer} = e
      const {files} = dataTransfer
      processSelectedFiles(files)
-   },false)
+   })
    //END DRAG AND DROP
 
    //CHOOSE FILE
