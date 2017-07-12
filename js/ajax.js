@@ -1,12 +1,14 @@
 export const POST = (url, data) => {
   return new Promise((resolve, reject) => {
     const http = new XMLHttpRequest();
+    // const taskURL = 'https://wt-ee16a188d40ed8e5f26fd95b409f077c-0.run.webtask.io/finaltask'
     http.open('POST', url);
+    // http.open('POST', taskURL + url);
     http.setRequestHeader('Content-Type', 'application/json')
     http.onload = () => {
       try {
-        const jsonData = JSON.parse(http.responseText);
-        resolve(jsonData);
+        const data = JSON.parse(http.responseText);
+        resolve(data);
       } catch (e) {
         reject(e);
       }
