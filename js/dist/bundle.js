@@ -122,7 +122,7 @@ function processSelectedFiles(files) {
 
         var div = document.createElement('div');
 
-        div.innerHTML = '\n      <div>' + file.name + '</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '">\n    ';
+        div.innerHTML = '\n      <div>' + file.name + '</div>\n      <img class="thumb" alt="' + file.name + '" src="' + target.result + '"/>\n    ';
         container.appendChild(div);
 
         (0, _ajax.POST)(_ajax.URL, {
@@ -273,7 +273,7 @@ var POST = exports.POST = function POST(url, data) {
 }; //POST
 
 
-// const APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
+var APIKEY = 'key=AIzaSyBHE9OOovbPznCiU_W3pFlsW4OjfNTmKmE';
 var PROTOCOL = 'https:';
 var APIVERSION = 'v1';
 var BASEURL = 'vision.googleapis.com';

@@ -28,7 +28,7 @@ export function processSelectedFiles(files) {
 
       div.innerHTML = `
       <div>${file.name}</div>
-      <img class="thumb" alt="${file.name}" src="${target.result}">
+      <img class="thumb" alt="${file.name}" src="${target.result}"/>
     `
       container.appendChild(div);
 
